@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">SMS Classifier</string>
+    <string name="nav_Primary">Primary</string>
+    <string name="nav_OTP">OTP</string>
+    <string name="nav_Transactions">Transactions</string>
+    <string name="nav_Promotions">Promotions</string>
+    <string name="nav_Spams">Spam</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="primary_fragment">Primary Fragment</string>
+    <string name="otp_fragment">OTP Fragment</string>
+    <string name="promotions_fragment">Promotions Fragment</string>
+    <string name="spam_fragment">Spam Fragment</string>
+    <string name="transactions_fragment">Transactions Fragment</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="item_search">Search</string>
+</resources>

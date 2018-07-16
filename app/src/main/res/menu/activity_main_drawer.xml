@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        /*<item
+            android:id="@+id/all_msg"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="string/all_msg" />
+        <item
+            android:id="@+id/nav_importants"
+            android:icon="@drawable/ic_local_important_black_24dp"
+            android:title="string/nav_important" />
+        <item
+            android:id="@+id/nav_spams"
+            android:icon="@drawable/ic_spams_black_24dp"
+            android:title="string/nav_spams" />
+        <item
+            android:id="@+id/nav_temporary"
+            android:icon="@drawable/ic_photo_library_black_24dp"
+            android:title="string/nav_temporary" />
+
+    </group>
+
+    <item android:title="Other">
+        <menu>
+            <item
+                android:id="@+id/nav_about_us"
+                android:title="string/nav_about_us" />
+            <item
+                android:id="@+id/nav_privacy_policy"
+                android:title="string/privacy_policy" />
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_settings_black_24dp"
+                android:title="string/nav_settings" />
+        </menu>
+    </item>*/
+
+</menu>

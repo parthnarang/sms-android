@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <item
+        android:id="@+id/action_search"
+        android:visible="true"
+        android:icon="@drawable/ic_action_search"
+        android:title="@string/item_search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always|collapseActionView"
+        />
+
+    <item
+        android:title="Mark All As Read"
+        android:id="@+id/id_markread"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:title="Refresh Messages"
+        android:id="@+id/id_refmess"
+        android:orderInCategory="101"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:title="Archive"
+        android:id="@+id/id_archive"
+        android:orderInCategory="102"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:title="Blocked"
+        android:id="@+id/id_blocked"
+        android:orderInCategory="103"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:title="Feedback"
+        android:id="@+id/id_feedback"
+        android:orderInCategory="104"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:title="Invite Friends"
+        android:id="@+id/id_invite"
+        android:orderInCategory="105"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:title="Settings"
+        android:id="@+id/id_setting"
+        android:orderInCategory="106"
+        app:showAsAction="never"
+        />
+
+</menu>
