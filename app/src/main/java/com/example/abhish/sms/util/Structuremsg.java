@@ -1,4 +1,4 @@
-package com.example.abhish.sms.activity;
+package com.example.abhish.sms.util;
 
 /**
  * Created by abhi.sh on 1/12/2018.

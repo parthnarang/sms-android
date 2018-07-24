@@ -1,10 +1,10 @@
-package com.example.abhish.sms.database;
+package com.example.abhish.sms.util;
 
 /**
  * Created by parth.narang on 1/12/2018.
  */
 
-public class Preprocessing {
+public class PreprocessingUtils {
     private static String[] stopWordsofwordnet = {
             "without", "see", "unless", "due", "also", "must", "might", "like", "will", "may", "can", "much", "every", "the", "in", "other", "the", "many", "any", "an", "or", "for", "in", "an", "an ", "is", "a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are", "aren’t", "as", "at", "be", "because", "been", "before", "being", "below", "between", "both", "but", "by", "can’t", "cannot", "could",
             "couldn’t", "did", "didn’t", "does", "doesn’t", "doing", "don’t", "down", "during", "each", "few", "from", "further", "had", "hadn’t", "has", "hasn’t", "have", "haven’t", "having",
@@ -27,7 +27,7 @@ public class Preprocessing {
     };
 
 
-    Preprocessing(){
+    PreprocessingUtils(){
         toLower();
 
     }

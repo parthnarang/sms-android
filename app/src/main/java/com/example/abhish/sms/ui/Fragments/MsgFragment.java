@@ -1,4 +1,4 @@
-package com.example.abhish.sms.fragment;
+package com.example.abhish.sms.ui.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.example.abhish.sms.R;
-import com.example.abhish.sms.activity.AppAdapter;
-import com.example.abhish.sms.activity.Structuremsg;
+import com.example.abhish.sms.ui.Adapters.AppAdapter;
+import com.example.abhish.sms.util.Structuremsg;
 
 import java.util.List;
 

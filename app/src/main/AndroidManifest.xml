@@ -25,15 +25,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.AboutUsActivity" />
-        <activity android:name=".activity.PrivacyPolicyActivity" />
+        <activity android:name=".ui.Activities.AboutUsActivity" />
+        <activity android:name=".ui.Activities.PrivacyPolicyActivity" />
 
         <service
-            android:name=".database.MessegeReceiveService"
+            android:name=".services.MessegeReceiveService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activity.SettingsActivity"></activity>
+        <activity android:name=".ui.Activities.SettingsActivity"></activity>
     </application>
 
 </manifest>

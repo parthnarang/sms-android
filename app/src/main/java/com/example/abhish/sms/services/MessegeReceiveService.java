@@ -1,4 +1,4 @@
-package com.example.abhish.sms.database;
+package com.example.abhish.sms.services;
 
 import android.app.Service;
 import android.content.ContentResolver;
@@ -11,15 +11,30 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.abhish.sms.Tasks.impl.DataParser;
+import com.example.abhish.sms.database.DatabaseHandler;
+import com.example.abhish.sms.Tasks.impl.MessageProcessingByNavTaskImpl;
+import com.example.abhish.sms.Receivers.MessageReceiver;
+import com.example.abhish.sms.util.Sms_format;
+
 public class MessegeReceiveService extends Service {
-    MyessegeReceive mReceiver;
+    MessageReceiver mReceiver;
     DatabaseHandler db;
     public void refreshSmsInbox() {
         ContentResolver contentResolver = getContentResolver();
         Cursor smsInboxCursor = contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null);
+
+        for (int i = 0; i < smsInboxCursor.getColumnCount(); i++)
+        {
+            Log.v("Count_maintain", smsInboxCursor.getColumnName(i).toString());
+        }
+        //smsInboxCursor.close();
+
         int indexBody = smsInboxCursor.getColumnIndex("body");
         int indexAddress = smsInboxCursor.getColumnIndex("address");
         if (indexBody < 0 || !smsInboxCursor.moveToFirst()) return;
+
+
         //arrayAdapter.clear();
         do {
             Log.d("parth_sms","here 1");
@@ -30,7 +45,7 @@ public class MessegeReceiveService extends Service {
             //arrayAdapter.add(str);
             db = new DatabaseHandler(this);
             Sms_format s= new Sms_format();
-            MechineLearningImpl machine = new MechineLearningImpl();
+            MessageProcessingByNavTaskImpl machine = new MessageProcessingByNavTaskImpl();
             s.number=number;
             s.body=sms_body;
             s.cat= machine.processMesg(sms_body);
@@ -48,7 +63,7 @@ public class MessegeReceiveService extends Service {
         // get an instance of the receiver in your service
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.provider.Telephony.SMS_RECEIVED");
-        mReceiver = new MyessegeReceive();
+        mReceiver = new MessageReceiver();
         registerReceiver(mReceiver, filter);
         Log.d("parth_sms","start");
         DataParser d = new DataParser();

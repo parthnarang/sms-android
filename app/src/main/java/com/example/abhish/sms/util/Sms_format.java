@@ -1,4 +1,4 @@
-package com.example.abhish.sms.database;
+package com.example.abhish.sms.util;
 
 /**
  * Created by parth.narang on 1/10/2018.

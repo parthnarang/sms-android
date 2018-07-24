@@ -27,23 +27,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhish.sms.R;
-import com.example.abhish.sms.activity.AboutUsActivity;
-import com.example.abhish.sms.activity.PrivacyPolicyActivity;
-import com.example.abhish.sms.activity.SettingsActivity;
-import com.example.abhish.sms.activity.Structuremsg;
-import com.example.abhish.sms.database.DataParser;
-import com.example.abhish.sms.database.MessegeReceiveService;
+import com.example.abhish.sms.util.Structuremsg;
+import com.example.abhish.sms.services.MessegeReceiveService;
 import com.example.abhish.sms.database.DatabaseHandler;
-import com.example.abhish.sms.database.Sms_format;
-import com.example.abhish.sms.fragment.MsgFragment;
-import com.example.abhish.sms.Fragment1.*;
+import com.example.abhish.sms.util.Sms_format;
+import com.example.abhish.sms.ui.Fragments.MsgFragment;
 
 import java.util.ArrayList;
 import java.util.List;

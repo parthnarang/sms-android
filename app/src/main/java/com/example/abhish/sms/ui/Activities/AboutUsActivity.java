@@ -1,4 +1,4 @@
-package com.example.abhish.sms.activity;
+package com.example.abhish.sms.ui.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

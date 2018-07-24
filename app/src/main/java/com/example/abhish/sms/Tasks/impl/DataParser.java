@@ -1,9 +1,11 @@
-package com.example.abhish.sms.database;
+package com.example.abhish.sms.Tasks.impl;
 
 /**
  * Created by parth.narang on 1/12/2018.
  */
 import android.util.Log;
+
+import com.example.abhish.sms.util.PreprocessingUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,7 +56,7 @@ public class DataParser {
         return jsonStr;
     }
 
-     void parseData() {
+     public void parseData() {
         //populate hashmapobj;
         String jsonStr = returnJsonString();
         try {
@@ -196,8 +198,8 @@ public class DataParser {
         //parseData();
 
         // data cleaning
-        Preprocessing pp = new Preprocessing();
-        String msg = pp.cleanData(txt);
+       // PreprocessingUtils pp = new PreprocessingUtils();
+        String msg = PreprocessingUtils.cleanData(txt);
 
         // prediction
         int pred = NaiveBayes(msg);

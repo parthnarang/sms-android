@@ -1,4 +1,4 @@
-package com.example.abhish.sms.activity;
+package com.example.abhish.sms.ui.Adapters;
 
 
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.abhish.sms.R;
+import com.example.abhish.sms.util.Structuremsg;
 
 import java.util.List;
 

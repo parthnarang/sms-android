@@ -1,4 +1,4 @@
-package com.example.abhish.sms.database;
+package com.example.abhish.sms.Receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,8 +7,12 @@ import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
-public class MyessegeReceive extends BroadcastReceiver {
-    public MyessegeReceive() {
+import com.example.abhish.sms.database.DatabaseHandler;
+import com.example.abhish.sms.Tasks.impl.MessageProcessingByNavTaskImpl;
+import com.example.abhish.sms.util.Sms_format;
+
+public class MessageReceiver extends BroadcastReceiver {
+    public MessageReceiver() {
     }
 
     @Override
@@ -36,7 +40,7 @@ public class MyessegeReceive extends BroadcastReceiver {
             Log.d("parth_sms", sms_body);
             DatabaseHandler db = new DatabaseHandler(context);
             Sms_format s= new Sms_format();
-            MechineLearningImpl machine = new MechineLearningImpl();
+            MessageProcessingByNavTaskImpl machine = new MessageProcessingByNavTaskImpl();
             s.cat= machine.processMesg(sms_body);
             s.number=number;
             s.body=sms_body;

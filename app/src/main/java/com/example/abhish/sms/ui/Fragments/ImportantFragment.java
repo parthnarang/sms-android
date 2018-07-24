@@ -1,4 +1,4 @@
-package com.example.abhish.sms.fragment;
+package com.example.abhish.sms.ui.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

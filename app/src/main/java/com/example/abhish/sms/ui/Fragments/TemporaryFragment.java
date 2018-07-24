@@ -1,4 +1,4 @@
-package com.example.abhish.sms.fragment;
+package com.example.abhish.sms.ui.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,13 +9,12 @@ import android.view.ViewGroup;
 import com.example.abhish.sms.R;
 
 
-public class SettingsFragment extends Fragment {
+public class TemporaryFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        return inflater.inflate(R.layout.fragment_temporary, container, false);
     }
-
 }
