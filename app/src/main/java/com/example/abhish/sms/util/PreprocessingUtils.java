@@ -27,9 +27,8 @@ public class PreprocessingUtils {
     };
 
 
-    PreprocessingUtils(){
+    public PreprocessingUtils(){
         toLower();
-
     }
 
     public static String cleanData(String msg){

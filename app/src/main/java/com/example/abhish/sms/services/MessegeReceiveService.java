@@ -7,10 +7,13 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.abhish.sms.Tasks.impl.DataIO;
 import com.example.abhish.sms.Tasks.impl.DataParser;
 import com.example.abhish.sms.database.DatabaseHandler;
 import com.example.abhish.sms.Tasks.impl.MessageProcessingByNavTaskImpl;
@@ -66,8 +69,17 @@ public class MessegeReceiveService extends Service {
         mReceiver = new MessageReceiver();
         registerReceiver(mReceiver, filter);
         Log.d("parth_sms","start");
-        DataParser d = new DataParser();
-        d.parseData();
+        //run parser on another thread
+        final DataParser d = new DataParser();
+        Handler mHandler = DataIO.getHandler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                d.parseData();
+            }
+        };
+        mHandler.post(runnable);
+
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
         SharedPreferences.Editor editor = pref.edit();

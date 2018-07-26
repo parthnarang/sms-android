@@ -12,6 +12,9 @@ import com.example.abhish.sms.Tasks.impl.MessageProcessingByNavTaskImpl;
 import com.example.abhish.sms.util.Sms_format;
 
 public class MessageReceiver extends BroadcastReceiver {
+
+    private MessageProcessingByNavTaskImpl machine = new MessageProcessingByNavTaskImpl();
+
     public MessageReceiver() {
     }
 
@@ -40,7 +43,6 @@ public class MessageReceiver extends BroadcastReceiver {
             Log.d("parth_sms", sms_body);
             DatabaseHandler db = new DatabaseHandler(context);
             Sms_format s= new Sms_format();
-            MessageProcessingByNavTaskImpl machine = new MessageProcessingByNavTaskImpl();
             s.cat= machine.processMesg(sms_body);
             s.number=number;
             s.body=sms_body;
