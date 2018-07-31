@@ -29,26 +29,27 @@ import java.util.Iterator;
 public class DataParser{
     Handler mHandler = DataIO.getHandler();
     static private ArrayList<HashMap<String,Integer>> categories = new ArrayList<HashMap<String,Integer>>();
-    static private HashSet<String> wordSet = new HashSet<String>();//To keep track of all unique words
-    static private HashMap<String, Integer> classProbabilities = new HashMap<String, Integer>();
+    //static private HashSet<String> wordSet = new HashSet<String>();//To keep track of all unique words
+    static private HashMap<String, Integer> wordSet = new HashMap<String, Integer>();//To keep track of all unique words
+    //static private HashMap<String, Integer> classProbabilities = new HashMap<String, Integer>();
     static private int NUM_OF_CATEGORIES = 5;
 
     //Read, Update and Save tcount values
     static HashMap<String, Integer> totalCount = new HashMap<String, Integer>();
     File json = new File("storage/emulated/0/data.json");
-    private Runnable runnable;
+    static private Runnable runnable;
 
     ArrayList<HashMap<String,Integer>> getCategories(){
         return categories;
     }
 
-    HashSet<String> getWordSet(){
+    HashMap<String,Integer> getWordSet(){
         return wordSet;
     }
 
-    HashMap<String,Integer> getClassProbabalities(){
+    /*HashMap<String,Integer> getClassProbabalities(){
         return classProbabilities;
-    }
+    }*/
 
     int getNumOfCategories(){
         return NUM_OF_CATEGORIES;
@@ -58,11 +59,11 @@ public class DataParser{
         return totalCount;
     }
 
-    void setCategories(ArrayList<HashMap<String,Integer>>categories){
+    /*void setCategories(ArrayList<HashMap<String,Integer>>categories){
         this.categories = categories;
     }
 
-    void setWordSet(HashSet<String>wordSet){
+    void setWordSet(HashMap<String,Integer>wordSet){
         this.wordSet = wordSet;
     }
 
@@ -72,7 +73,7 @@ public class DataParser{
 
     void setTotalCount(HashMap<String,Integer>totalCount){
         this.totalCount = totalCount;
-    }
+    }*/
 
     private String returnJsonString() {
         FileInputStream stream = null;
@@ -100,13 +101,15 @@ public class DataParser{
         //populate hashmapobj;
         String jsonStr = returnJsonString();
         try {
-            //COMMENT - READ WORDSET VALUES FROM JSON FILE TOO!!!!!!!!!!!!!!!!
-            //COMMENT - READ CLASS PROBABILITY VALUES FROM JSON FILE TOO!!!!!!!!!!!!!!!!
+            //COMMENT - READ WORDSET VALUES FROM JSON FILE TOO!!!!!!!!!!!!!!!! #DONE
+            //COMMENT - READ CLASS PROBABILITY VALUES FROM JSON FILE TOO!!!!!!!!!!!!!!!! -(CHANGED) NEED TO GET FROM DB
             JSONObject jobject = new JSONObject(jsonStr);
             totalCount = getMap((JSONObject) jobject.get("COUNT"));
             Log.d("parth_sms", totalCount + " ");
             JSONArray feature = (JSONArray) jobject.getJSONArray("FEATURE");
             JSONObject frequency = (JSONObject) jobject.get("FREQUENCY");
+            wordSet = getMap((JSONObject) jobject.get("WORDSET"));
+
             for(int i=0; i<NUM_OF_CATEGORIES ; ++i){
                 categories.add(getMap((JSONObject) frequency.get(Integer.toString(i))));
             }
@@ -147,19 +150,34 @@ public class DataParser{
         for (int i = 0; i < msgparts.length; ++i) {
             String word = msgparts[i];
             if(map.containsKey(word)){
-                int cou= map.get(word);
-                map.put(word, ++cou);
+                int count = map.get(word);
+                map.put(word, ++count);
             }
             else
                 map.put(word,1);
         }
+
+        for(String word:msgparts){
+            wordSet.put(word,1);
+        }
+
+        int init_val = totalCount.get(Integer.toString(cat));
+        totalCount.put(Integer.toString(cat), init_val + msgparts.length);
+
         String jsonStr = returnJsonString();
         try {
             JSONObject jobject = new JSONObject(jsonStr);
+
             JSONObject frequency = (JSONObject) jobject.get("FREQUENCY");
             JSONObject category = new JSONObject(map);
+            JSONObject tCount = new JSONObject(totalCount);
+            JSONObject wSet = new JSONObject(wordSet);
+
+            jobject.put("COUNT",tCount);//COMMENT - CHECK VALIDITY
+            jobject.put("WORDSET",wSet);//COMMENT - CHECK VALIDITY
             frequency.put(String.valueOf(cat),category);
             jobject.put("FREQUENCY",frequency);
+
             String path = "storage/emulated/0/datar.json";
 
             ObjectOutputStream outputStream = null;
@@ -175,6 +193,7 @@ public class DataParser{
     }
 
     public void WriteToFile(final String msg, final int cat) {
+        //COMMENT - CHECK IF MEMORY LEAK IS OCCURING!!
         runnable = new Runnable() {
             @Override
             public void run() {

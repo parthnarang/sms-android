@@ -13,8 +13,8 @@ public class NaiveBayes {
     DataParser dataParser = new DataParser();
 
     static ArrayList<HashMap<String,Integer>> categories;
-    static HashSet<String> wordSet;
-    static HashMap<String, Integer> classProbabilities;
+    static HashMap<String, Integer> wordSet;
+    static HashMap<String, Double> classProbabilities = new HashMap<String,Double>();
     static int NUM_OF_CATEGORIES;
 
     //Read, Update and Save tcount values
@@ -24,9 +24,17 @@ public class NaiveBayes {
     void populateDataStructures(){
         categories = dataParser.getCategories();
         wordSet = dataParser.getWordSet();
-        classProbabilities = dataParser.getClassProbabalities();
         NUM_OF_CATEGORIES = dataParser.getNumOfCategories();
         totalCount = dataParser.getTotalCount();
+
+        //COMMENT: GET VALUES FOR CLASS PROBABILITY FROM DATABASE!!!!!!!!!!!
+        //classProbabilities = dataParser.getClassProbabalities();
+        //COMMENT - CHANGE BELOW CODE!!!!!!!!! THIS IS DUMMY DATA
+        classProbabilities.put("0",0.2);
+        classProbabilities.put("1",0.2);
+        classProbabilities.put("2",0.2);
+        classProbabilities.put("3",0.2);
+        classProbabilities.put("4",0.2);
     }
 
 
@@ -62,44 +70,6 @@ public class NaiveBayes {
         return category;
     }
 
-    void updateFrequencies(String msg, int category){
-        String[] msgparts = msg.split(" ");
-        /*COMMENT - UPDATE VALUES IN HANDLER!!!!!!!!!!
-          COMMENT - READ VALUES IN HANDLER!!!!!!!!!!!!
-        */
-
-        //update values in hashmap to account for the new words
-        for (int i = 0; i < msgparts.length; ++i) {
-            String word = msgparts[i];
-            HashMap<String,Integer> category_map = categories.get(category);
-            if (category_map.containsKey(word)) {
-                int init_val = category_map.get(word);
-                category_map.put(word, init_val + 1);
-            } else {
-                category_map.put(word, 1);
-            }
-            categories.set(category,category_map);
-        }
-
-        //update class frequencies
-        int init_val = totalCount.get(Integer.toString(category));
-        totalCount.put(Integer.toString(category), init_val + msgparts.length);
-
-        //add Words to Wordset
-        wordSet.addAll(Arrays.asList(msgparts));//COMMENT - VERIFY CORRECTNESS OF THIS LINE!!!!!!!!!!!!!!!!
-        //COMMENT - THIS VALUE MUST BE CHANGED IF THE USER CHOOSES TO CHANGE THE PREDICTION, WELL THAT IS A DIFFERENT STORY
-        //AND SHALL BE EASY BECAUSE WE SHALL CHANGE THE VALUE OF THE PREDICTED CLASS AND INCREASE THE VALUE OF ACTUAL CLASS
-        //THE SAME SHALL APPLY FOR WORD FREQUENCIES HASHSET, THE VALUES SHALL HAVE TO BE MODIFIED IN PREDICTED AND ACTUAL CLASS
-        classProbabilities.put(Integer.toString(category),classProbabilities.get(Integer.toString(category) + 1));
-
-        dataParser.setCategories(categories);
-        dataParser.setClassProbabalities(classProbabilities);
-        dataParser.setTotalCount(totalCount);
-        dataParser.setWordSet(wordSet);
-
-    }
-
-
     @SuppressWarnings("static-access")
     public int getCategory(String txt) {
         // data cleaning
@@ -108,8 +78,6 @@ public class NaiveBayes {
         populateDataStructures();
 
         int prediction = NaiveBayesClassifier(msg);
-
-        updateFrequencies(msg,prediction);
 
         dataParser.WriteToFile(msg,prediction);
 
