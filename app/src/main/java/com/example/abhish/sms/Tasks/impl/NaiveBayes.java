@@ -46,15 +46,17 @@ public class NaiveBayes {
             double probability = 1.0;
             for (int i = 0; i < msgparts.length; ++i) {
                 String word = msgparts[i];
-                if (categories.get(i).containsKey(word)) {
-                    probability *= ((double) categories.get(i).get(word)) / (double) (totalCount.get(Integer.toString(i)));
+                if (categories.get(j).containsKey(word)) {
+
+                    probability *= ((double) categories.get(j).get(word)) / (double) (totalCount.get(Integer.toString(j)));
                 } else {
-                    Log.d("parth_sms", totalCount + " " + totalCount.size() + " " + totalCount.get(Integer.toString(i)) + " ");
+                    Log.d("parth_sms", totalCount + " " + totalCount.size() + " " + totalCount.get(Integer.toString(j)) + " ");
                     //probability *= 1.0 / (double) (tcount.get(Integer.toString(i)));
                     probability *= 1.0 / (double) (wordSet.size());
                 }
             }
-            probability *= classProbabilities.get(j);
+            Log.d("logee",""+j+"\n");
+            probability *= classProbabilities.get(Integer.toString(j));
             probabilities.add(probability);
         }
 

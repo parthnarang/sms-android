@@ -27,7 +27,7 @@ import java.util.Iterator;
 
 //COMMENT - MAKE A METHOD IN WHICH I CHANGE VALUES FROM ONE CLASS TO ANOTHER(WHEN PREDICTED DIFF FROM ACTUAL) IN HASHMAPS ETC.
 public class DataParser{
-    Handler mHandler = DataIO.getHandler();
+   // DataIO instance = DataIO.getInstance();
     static private ArrayList<HashMap<String,Integer>> categories = new ArrayList<HashMap<String,Integer>>();
     //static private HashSet<String> wordSet = new HashSet<String>();//To keep track of all unique words
     static private HashMap<String, Integer> wordSet = new HashMap<String, Integer>();//To keep track of all unique words
@@ -98,6 +98,7 @@ public class DataParser{
     }
 
     public void parseData() {
+        Log.d("check_machine","yes");
         //populate hashmapobj;
         String jsonStr = returnJsonString();
         try {
@@ -200,6 +201,6 @@ public class DataParser{
                 writeToJson(msg,cat);
             }
         };
-        mHandler.post(runnable);
+       // instance.getHandler().post(runnable);
     }
 }
