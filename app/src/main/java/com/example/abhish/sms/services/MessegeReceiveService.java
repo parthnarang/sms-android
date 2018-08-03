@@ -18,7 +18,7 @@ import com.example.abhish.sms.Tasks.impl.DataParser;
 import com.example.abhish.sms.database.DatabaseHandler;
 import com.example.abhish.sms.Tasks.impl.MessageProcessingByNavTaskImpl;
 import com.example.abhish.sms.Receivers.MessageReceiver;
-import com.example.abhish.sms.util.Sms_format;
+import com.example.abhish.sms.util.MessegeEntry;
 
 public class MessegeReceiveService extends Service {
     MessageReceiver mReceiver;
@@ -35,25 +35,29 @@ public class MessegeReceiveService extends Service {
 
         int indexBody = smsInboxCursor.getColumnIndex("body");
         int indexAddress = smsInboxCursor.getColumnIndex("address");
+        int person = smsInboxCursor.getColumnIndex("person");
+        int type = smsInboxCursor.getColumnIndex("type");
         if (indexBody < 0 || !smsInboxCursor.moveToFirst()) return;
 
 
         //arrayAdapter.clear();
         do {
-            Log.d("parth_sms","here 1");
+
+
             // String str = "SMS From: " + smsInboxCursor.getString(indexAddress) +
             //   "\n" + smsInboxCursor.getString(indexBody) + "\n";
             String number = smsInboxCursor.getString(indexAddress);
             String sms_body = smsInboxCursor.getString(indexBody);
+            Log.v("abc",smsInboxCursor.getString(person) + " " + smsInboxCursor.getString(type));
             //arrayAdapter.add(str);
             db = new DatabaseHandler(this);
-            Sms_format s= new Sms_format();
+            MessegeEntry entry= new MessegeEntry();
             MessageProcessingByNavTaskImpl machine = new MessageProcessingByNavTaskImpl();
-            s.number=number;
-            s.body=sms_body;
-            s.cat= machine.processMesg(sms_body);
-            Log.d("parth_sms",s.cat);
-            db.addsms(s);
+            entry.messegeAddress=number;
+            entry.messegeBody=sms_body;
+            entry.messegeCategory= Integer.parseInt(machine.processMesg(sms_body));
+
+            db.addToDatabase(entry);
         } while (smsInboxCursor.moveToNext());
         db.close();
     }
@@ -71,14 +75,14 @@ public class MessegeReceiveService extends Service {
         Log.d("parth_sms","start");
         //run parser on another thread
         final DataParser d = new DataParser();
-        Handler mHandler = DataIO.getHandler();
+        DataIO instance = DataIO.getInstance();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 d.parseData();
             }
         };
-        mHandler.post(runnable);
+        instance.getHandler().post(runnable);
 
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);

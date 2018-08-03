@@ -9,12 +9,9 @@ import android.util.Log;
 
 import com.example.abhish.sms.database.DatabaseHandler;
 import com.example.abhish.sms.Tasks.impl.MessageProcessingByNavTaskImpl;
-import com.example.abhish.sms.util.Sms_format;
+import com.example.abhish.sms.util.MessegeEntry;
 
 public class MessageReceiver extends BroadcastReceiver {
-
-    private MessageProcessingByNavTaskImpl machine = new MessageProcessingByNavTaskImpl();
-
     public MessageReceiver() {
     }
 
@@ -42,11 +39,12 @@ public class MessageReceiver extends BroadcastReceiver {
            // Toast.makeText(context, sms_str, 4).show();
             Log.d("parth_sms", sms_body);
             DatabaseHandler db = new DatabaseHandler(context);
-            Sms_format s= new Sms_format();
-            s.cat= machine.processMesg(sms_body);
-            s.number=number;
-            s.body=sms_body;
-            db.addsms(s);
+            MessegeEntry entry= new MessegeEntry();
+            MessageProcessingByNavTaskImpl machine = new MessageProcessingByNavTaskImpl();
+            entry.messegeCategory= Integer.parseInt(machine.processMesg(sms_body));
+            entry.messegeAddress=number;
+            entry.messegeBody=sms_body;
+            db.addToDatabase(entry);
 
         }
     }

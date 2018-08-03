@@ -5,44 +5,37 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
-import com.example.abhish.sms.util.Sms_format;
+import com.example.abhish.sms.util.MessegeEntry;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.abhish.sms.database.TableData.CREATE_TABLE_SMS;
+import static com.example.abhish.sms.database.TableData.TABLE_SMS;
+
 /**
  * Created by parth.narang on 1/10/2018.
  */
-public class DatabaseHandler extends SQLiteOpenHelper {
-
+public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseHelper {
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 1;
-
-    // Database Name
-    private static final String DATABASE_NAME = "SMS";
-
-    // Sms table name
-    private static final String TABLE_SMS = "MasterTable";
-
-    // Sms Table Columns names
-    private static final String KEY_ID = "id";
-    private static final String KEY_NAME = "body";
-    private static final String KEY_PH_NO = "phone_number";
-    private static final String KEY_CATEGORY = "category";
+    public String KEY_CATEGORY= "category";
 
     public DatabaseHandler(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, TableData.DATABASE_NAME, null, TableData.DATABASE_VERSION);
     }
 
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_SMS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-                + KEY_PH_NO + " TEXT," + KEY_CATEGORY + " TEXT" + ")";
-        db.execSQL(CREATE_CONTACTS_TABLE);
+        Log.d("curson",CREATE_TABLE_SMS);
+        try{
+            db.execSQL(TableData.CREATE_TABLE_SMS);}
+        catch (Exception e){
+            Log.d("parth",e.toString());
+        }
     }
 
     // Upgrading database
@@ -52,41 +45,37 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SMS);
         onCreate(db);
     }
+    public boolean addToDatabase(MessegeEntry entry) {
 
-    public void addsms(Sms_format sms) {
-        String ph_no= sms.number;
-        String body= sms.body;
-        String cat= sms.cat;
         SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(KEY_NAME, body); // Messege body
-        values.put(KEY_PH_NO, ph_no);// Contact  Number
-        values.put(KEY_CATEGORY, cat);// Messege Cat
+        ContentValues values = entry.getContentValues(entry);
 
         // Inserting Row
         db.insert(TABLE_SMS, null, values);
         db.close(); // Closing database connection
+        return true;
     }
-    public List<Sms_format> getsmsByCat(String cat) {
-        List<Sms_format> sms = new ArrayList<Sms_format>();
+
+    public List<MessegeEntry> getSmsByCategory(int cat) {
+        List<MessegeEntry> sms = new ArrayList<MessegeEntry>();
         String selectQuery = "SELECT  * FROM " + TABLE_SMS + " WHERE " + KEY_CATEGORY + " = '" + cat + "'" ;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
+        Log.d("curson",""+cursor.getCount());
         if (cursor.moveToFirst()) {
             do {
-                Sms_format contact = new Sms_format();
-                contact.body = cursor.getString(1);
-                contact.number = cursor.getString(2);
+                MessegeEntry entry = new MessegeEntry();
+                entry.messegeBody = cursor.getString(0);
+                entry.messegeAddress = cursor.getString(1);
                 // Adding contact to list
-                sms.add(contact);
+                sms.add(entry);
             } while (cursor.moveToNext());
         }
-db.close();
+        db.close();
         return sms;
     }
-    public List<Sms_format> getsms() {
+ /*   public List<Sms_format> getsms() {
         List<Sms_format> sms = new ArrayList<Sms_format>();
         String selectQuery = "SELECT  * FROM " + TABLE_SMS ;
 
@@ -103,6 +92,6 @@ db.close();
         }
 db.close();
         return sms;
-    }
+    }*/
 }
 

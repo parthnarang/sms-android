@@ -33,10 +33,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhish.sms.R;
+import com.example.abhish.sms.util.MessegeEntry;
 import com.example.abhish.sms.util.Structuremsg;
 import com.example.abhish.sms.services.MessegeReceiveService;
 import com.example.abhish.sms.database.DatabaseHandler;
-import com.example.abhish.sms.util.Sms_format;
 import com.example.abhish.sms.ui.Fragments.MsgFragment;
 
 import java.util.ArrayList;
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
-            getPermissionToReadSMS();
+           // getPermissionToReadSMS();
         }
 
         mHandler = new Handler();
@@ -256,43 +256,44 @@ public class MainActivity extends AppCompatActivity {
         switch (navItemIndex) {
             case 0:
                 // all_msg
-                list = convertList(databaseHandler.getsms());
+                list = convertList(databaseHandler.getSmsByCategory(0));
                 msgFragment = new MsgFragment();
                 msgFragment.setListMsg(list);
                 return msgFragment;
             case 1:
                 // importants fragment
-                list = convertList(databaseHandler.getsmsByCat("0"));
+                list = convertList(databaseHandler.getSmsByCategory(1));
                 msgFragment = new MsgFragment();
                 msgFragment.setListMsg(list);
                 return msgFragment;
             case 2:
                 // spams fragment
-                list = convertList(databaseHandler.getsmsByCat("1"));
+                list = convertList(databaseHandler.getSmsByCategory(2));
                 msgFragment = new MsgFragment();
                 msgFragment.setListMsg(list);
                 return msgFragment;
             case 3:
                 // temporary
-                list = convertList(databaseHandler.getsmsByCat("2"));
+                list = convertList(databaseHandler.getSmsByCategory(3));
                 msgFragment = new MsgFragment();
                 msgFragment.setListMsg(list);
                 return msgFragment;
 
-            default:
-                list = convertList(databaseHandler.getsms());
+            /*default:
+              /*  list = convertList(databaseHandler.getsms());
                 msgFragment = new MsgFragment();
                 msgFragment.setListMsg(list);
-                return msgFragment;
+                return msgFragment;*/
         }
+        return null;
     }
 
-    private List<Structuremsg> convertList(List<Sms_format> getsms) {
+    private List<Structuremsg> convertList(List<MessegeEntry> getsms) {
         List<Structuremsg> list = new ArrayList<>();
         Log.d("MERA", getsms.size()+"");
-        for(Sms_format sms: getsms){
-            Log.d("MERA", sms.toString());
-            list.add(new Structuremsg(sms.number, sms.body));
+        for(MessegeEntry sms: getsms){
+            Log.d("MERA", sms.getMessegeAddress());
+            list.add(new Structuremsg(sms.getMessegeAddress(), sms.getBody()));
         }
         return list;
     }
@@ -464,7 +465,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void getPermissionToReadSMS() {
+    /*public void getPermissionToReadSMS() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
             if (shouldShowRequestPermissionRationale(
@@ -474,7 +475,7 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(new String[]{Manifest.permission.READ_SMS},
                     READ_SMS_PERMISSIONS_REQUEST);
         }
-    }
+    }*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
