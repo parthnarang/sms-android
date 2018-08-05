@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
      * Returns respected fragment that user
      * selected from navigation menu
      */
-      private void loadall_msgFragment() {
+      public void loadall_msgFragment() {
         // selecting appropriate nav menu item
         selectNavMenu();
 

@@ -35,31 +35,38 @@ public class MessegeReceiveService extends Service {
 
         int indexBody = smsInboxCursor.getColumnIndex("body");
         int indexAddress = smsInboxCursor.getColumnIndex("address");
-        int person = smsInboxCursor.getColumnIndex("person");
-        int type = smsInboxCursor.getColumnIndex("type");
-        if (indexBody < 0 || !smsInboxCursor.moveToFirst()) return;
+        int read = smsInboxCursor.getColumnIndex("read");
+        int date = smsInboxCursor.getColumnIndex("date");
+        if (indexBody < 0 || !smsInboxCursor.moveToFirst()) {
 
+        } else {
 
-        //arrayAdapter.clear();
-        do {
+            //arrayAdapter.clear();
+            do {
 
+                // String str = "SMS From: " + smsInboxCursor.getString(indexAddress) +
+                //   "\n" + smsInboxCursor.getString(indexBody) + "\n";
+                String number = smsInboxCursor.getString(indexAddress);
+                String sms_body = smsInboxCursor.getString(indexBody);
+                String read_status = smsInboxCursor.getString(read);
+                String date_time = smsInboxCursor.getString(date);
 
-            // String str = "SMS From: " + smsInboxCursor.getString(indexAddress) +
-            //   "\n" + smsInboxCursor.getString(indexBody) + "\n";
-            String number = smsInboxCursor.getString(indexAddress);
-            String sms_body = smsInboxCursor.getString(indexBody);
-            Log.v("abc",smsInboxCursor.getString(person) + " " + smsInboxCursor.getString(type));
-            //arrayAdapter.add(str);
-            db = new DatabaseHandler(this);
-            MessegeEntry entry= new MessegeEntry();
-            MessageProcessingByNavTaskImpl machine = new MessageProcessingByNavTaskImpl();
-            entry.messegeAddress=number;
-            entry.messegeBody=sms_body;
-            entry.messegeCategory= Integer.parseInt(machine.processMesg(sms_body));
+                //Log.v("abc",smsInboxCursor.getString(read) + " " + smsInboxCursor.getString(date));
+                //arrayAdapter.add(str);
+                db = new DatabaseHandler(this);
+                MessegeEntry entry = new MessegeEntry(this);
+                MessageProcessingByNavTaskImpl machine = new MessageProcessingByNavTaskImpl();
+                entry.messegeAddress = number;
+                entry.messegeBody = sms_body;
+                entry.date = date_time;
+                //entry.contactName = getContactName(this,number);
+                entry.readStatus = Boolean.parseBoolean(read_status);
+                entry.messegeCategory = Integer.parseInt(machine.processMesg(sms_body));
 
-            db.addToDatabase(entry);
-        } while (smsInboxCursor.moveToNext());
-        db.close();
+                db.addToDatabase(entry);
+            } while (smsInboxCursor.moveToNext());
+            db.close();
+        }
     }
 
     // use this as an inner class like here or as a top-level class

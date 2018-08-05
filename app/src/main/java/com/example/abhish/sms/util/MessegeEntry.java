@@ -1,8 +1,15 @@
 package com.example.abhish.sms.util;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.ContactsContract;
+import android.util.Log;
 
 import com.example.abhish.sms.database.TableData;
+import com.example.abhish.sms.ui.Activities.MainActivity;
 
 public class MessegeEntry {
 
@@ -16,19 +23,30 @@ public class MessegeEntry {
     public String messegeAddress;
     public String messegeBody;
     public int messegeCategory;
-    private String contactName;
-    private String time;
-    private String date;
-    private boolean readStatus;
-    private String network;
-
+    public String contactName;
+    public String time;
+    public String date;
+    public boolean readStatus;
+    public String network;
+    private Context con;
     public MessegeEntry(){
+        contactName="abc";
+        time="abc";
+        date="abc";
+        readStatus=false;
+        network="abc";
+
+    }
+
+    public MessegeEntry(Context con){
+        this.con=con;
     contactName="abc";
     time="abc";
     date="abc";
     readStatus=false;
     network="abc";
     }
+
 
     public MessegeEntry(String messegeAddress, String messegeBody, int messegeCategory,
                         String contactName, String time, String date, boolean readStatus, String network) {
@@ -50,6 +68,7 @@ public class MessegeEntry {
     }
     public String getContactName(){
         return contactName;
+
     }
     public String getDate(){
         return date;
@@ -74,7 +93,7 @@ public class MessegeEntry {
         values.put(TableData.KEY_NAME, entry.getBody());
         values.put(TableData.KEY_PH_NO, entry.getMessegeAddress());
         values.put(TableData.DATE, entry.getDate());
-        values.put(TableData.TIME, entry.getTime());
+        values.put(TableData.STATUS, entry.getStatus());
         values.put(TableData.Contact_Name, entry.getContactName());
         values.put(TableData.NETWORK, entry.getNetwork());
         values.put(TableData.CATEGORY, entry.getCategoty());

@@ -1,0 +1,130 @@
+Index: app/src/main/java/com/example/abhish/sms/database/DatabaseHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.abhish.sms.database;\n\nimport android.content.ContentValues;\nimport android.content.Context;\nimport android.database.Cursor;\nimport android.database.sqlite.SQLiteDatabase;\nimport android.database.sqlite.SQLiteOpenHelper;\n\nimport com.example.abhish.sms.util.Sms_format;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\n/**\n * Created by parth.narang on 1/10/2018.\n */\npublic class DatabaseHandler extends SQLiteOpenHelper {\n\n    // All Static variables\n    // Database Version\n    private static final int DATABASE_VERSION = 1;\n\n    // Database Name\n    private static final String DATABASE_NAME = \"SMS\";\n\n    // Sms table name\n    private static final String TABLE_SMS = \"MasterTable\";\n\n    // Sms Table Columns names\n    private static final String KEY_ID = \"id\";\n    private static final String KEY_NAME = \"body\";\n    private static final String KEY_PH_NO = \"phone_number\";\n    private static final String KEY_CATEGORY = \"category\";\n\n    public DatabaseHandler(Context context) {\n        super(context, DATABASE_NAME, null, DATABASE_VERSION);\n    }\n\n    // Creating Tables\n    @Override\n    public void onCreate(SQLiteDatabase db) {\n        String CREATE_CONTACTS_TABLE = \"CREATE TABLE \" + TABLE_SMS + \"(\"\n                + KEY_ID + \" INTEGER PRIMARY KEY,\" + KEY_NAME + \" TEXT,\"\n                + KEY_PH_NO + \" TEXT,\" + KEY_CATEGORY + \" TEXT\" + \")\";\n        db.execSQL(CREATE_CONTACTS_TABLE);\n    }\n\n    // Upgrading database\n    @Override\n    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {\n        // Drop older table if existed\n        db.execSQL(\"DROP TABLE IF EXISTS \" + TABLE_SMS);\n        onCreate(db);\n    }\n\n    public void addsms(Sms_format sms) {\n        String ph_no= sms.number;\n        String body= sms.body;\n        String cat= sms.cat;\n        SQLiteDatabase db = this.getWritableDatabase();\n\n        ContentValues values = new ContentValues();\n        values.put(KEY_NAME, body); // Messege body\n        values.put(KEY_PH_NO, ph_no);// Contact  Number\n        values.put(KEY_CATEGORY, cat);// Messege Cat\n\n        // Inserting Row\n        db.insert(TABLE_SMS, null, values);\n        db.close(); // Closing database connection\n    }\n    public List<Sms_format> getsmsByCat(String cat) {\n        List<Sms_format> sms = new ArrayList<Sms_format>();\n        String selectQuery = \"SELECT  * FROM \" + TABLE_SMS + \" WHERE \" + KEY_CATEGORY + \" = '\" + cat + \"'\" ;\n\n        SQLiteDatabase db = this.getWritableDatabase();\n        Cursor cursor = db.rawQuery(selectQuery, null);\n        if (cursor.moveToFirst()) {\n            do {\n                Sms_format contact = new Sms_format();\n                contact.body = cursor.getString(1);\n                contact.number = cursor.getString(2);\n                // Adding contact to list\n                sms.add(contact);\n            } while (cursor.moveToNext());\n        }\ndb.close();\n        return sms;\n    }\n    public List<Sms_format> getsms() {\n        List<Sms_format> sms = new ArrayList<Sms_format>();\n        String selectQuery = \"SELECT  * FROM \" + TABLE_SMS ;\n\n        SQLiteDatabase db = this.getWritableDatabase();\n        Cursor cursor = db.rawQuery(selectQuery, null);\n        if (cursor.moveToFirst()) {\n            do {\n                Sms_format contact = new Sms_format();\n                contact.body = cursor.getString(1);\n                contact.number = cursor.getString(2);\n                // Adding contact to list\n                sms.add(contact);\n            } while (cursor.moveToNext());\n        }\ndb.close();\n        return sms;\n    }\n}\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/abhish/sms/database/DatabaseHandler.java	(revision 920795fce4b75bbd4dd8799ada1ea5605c4e1a0c)
++++ app/src/main/java/com/example/abhish/sms/database/DatabaseHandler.java	(date 1532971357998)
+@@ -5,44 +5,37 @@
+ import android.database.Cursor;
+ import android.database.sqlite.SQLiteDatabase;
+ import android.database.sqlite.SQLiteOpenHelper;
++import android.util.Log;
+ 
+-import com.example.abhish.sms.util.Sms_format;
++import com.example.abhish.sms.util.MessegeEntry;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+ 
++import static com.example.abhish.sms.database.TableData.CREATE_TABLE_SMS;
++import static com.example.abhish.sms.database.TableData.TABLE_SMS;
++
+ /**
+  * Created by parth.narang on 1/10/2018.
+  */
+-public class DatabaseHandler extends SQLiteOpenHelper {
+-
++public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseHelper {
+     // All Static variables
+     // Database Version
+-    private static final int DATABASE_VERSION = 1;
+-
+-    // Database Name
+-    private static final String DATABASE_NAME = "SMS";
+-
+-    // Sms table name
+-    private static final String TABLE_SMS = "MasterTable";
+-
+-    // Sms Table Columns names
+-    private static final String KEY_ID = "id";
+-    private static final String KEY_NAME = "body";
+-    private static final String KEY_PH_NO = "phone_number";
+-    private static final String KEY_CATEGORY = "category";
++public String KEY_CATEGORY= "category";
+ 
+     public DatabaseHandler(Context context) {
+-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
++        super(context, TableData.DATABASE_NAME, null, TableData.DATABASE_VERSION);
+     }
+ 
+     // Creating Tables
+     @Override
+     public void onCreate(SQLiteDatabase db) {
+-        String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_SMS + "("
+-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
+-                + KEY_PH_NO + " TEXT," + KEY_CATEGORY + " TEXT" + ")";
+-        db.execSQL(CREATE_CONTACTS_TABLE);
++        Log.d("curson",CREATE_TABLE_SMS);
++        try{
++        db.execSQL(TableData.CREATE_TABLE_SMS);}
++        catch (Exception e){
++            Log.d("parth",e.toString());
++        }
+     }
+ 
+     // Upgrading database
+@@ -52,41 +45,37 @@
+         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SMS);
+         onCreate(db);
+     }
++    public boolean addToDatabase(MessegeEntry entry) {
+ 
+-    public void addsms(Sms_format sms) {
+-        String ph_no= sms.number;
+-        String body= sms.body;
+-        String cat= sms.cat;
+         SQLiteDatabase db = this.getWritableDatabase();
+-
+-        ContentValues values = new ContentValues();
+-        values.put(KEY_NAME, body); // Messege body
+-        values.put(KEY_PH_NO, ph_no);// Contact  Number
+-        values.put(KEY_CATEGORY, cat);// Messege Cat
++        ContentValues values = entry.getContentValues(entry);
+ 
+         // Inserting Row
+         db.insert(TABLE_SMS, null, values);
+         db.close(); // Closing database connection
++        return true;
+     }
+-    public List<Sms_format> getsmsByCat(String cat) {
+-        List<Sms_format> sms = new ArrayList<Sms_format>();
++
++    public List<MessegeEntry> getSmsByCategory(int cat) {
++        List<MessegeEntry> sms = new ArrayList<MessegeEntry>();
+         String selectQuery = "SELECT  * FROM " + TABLE_SMS + " WHERE " + KEY_CATEGORY + " = '" + cat + "'" ;
+ 
+         SQLiteDatabase db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
++        Log.d("curson",""+cursor.getCount());
+         if (cursor.moveToFirst()) {
+             do {
+-                Sms_format contact = new Sms_format();
+-                contact.body = cursor.getString(1);
+-                contact.number = cursor.getString(2);
++                MessegeEntry entry = new MessegeEntry();
++                entry.messegeBody = cursor.getString(0);
++                entry.messegeAddress = cursor.getString(1);
+                 // Adding contact to list
+-                sms.add(contact);
++                sms.add(entry);
+             } while (cursor.moveToNext());
+         }
+ db.close();
+         return sms;
+     }
+-    public List<Sms_format> getsms() {
++ /*   public List<Sms_format> getsms() {
+         List<Sms_format> sms = new ArrayList<Sms_format>();
+         String selectQuery = "SELECT  * FROM " + TABLE_SMS ;
+ 
+@@ -103,6 +92,6 @@
+         }
+ db.close();
+         return sms;
+-    }
++    }*/
+ }
+ 
