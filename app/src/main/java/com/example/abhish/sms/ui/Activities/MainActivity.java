@@ -7,12 +7,10 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -33,11 +31,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhish.sms.R;
-import com.example.abhish.sms.util.MessegeEntry;
-import com.example.abhish.sms.util.Structuremsg;
-import com.example.abhish.sms.services.MessegeReceiveService;
 import com.example.abhish.sms.database.DatabaseHandler;
+import com.example.abhish.sms.services.MessageReceiveService;
 import com.example.abhish.sms.ui.Fragments.MsgFragment;
+import com.example.abhish.sms.util.MessageEntry;
+import com.example.abhish.sms.util.StructureMsg;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,41 +43,36 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    // tags used to attach the fragments
+    private static final String TAG_All_MSG = "primary";
+    private static final String TAG_OTP = "otp";
+    private static final String TAG_TRANSACTION = "transaction";
+    private static final String TAG_PROMOTION = "promotion";
+    private static final String TAG_SPAM = "spam";
+    private static final String TAG_SETTINGS = "settings";
+    private static final int READ_SMS_PERMISSIONS_REQUEST = 1;
+    // index to identify current nav menu item
+    public static int navItemIndex = 0;
+    public static String CURRENT_TAG = TAG_All_MSG;
+    ArrayList<StructureMsg> smsMessagesList = new ArrayList<>();
+    ListView messages;
+    ArrayAdapter arrayAdapter;
+    SmsManager smsManager = SmsManager.getDefault();
     private NavigationView navigationView;
     private DrawerLayout drawer;
     private View navHeader;
     private ImageView imgNavHeaderBg, imgProfile;
+
+
+    // toolbar titles respected to selected nav menu item
     private TextView txtName, txtWebsite;
     private Toolbar toolbar;
     private FloatingActionButton fab;
     private BottomNavigationView bottomNavigationView;
-
-
-    // index to identify current nav menu item
-    public static int navItemIndex = 0;
-
-    // tags used to attach the fragments
-    private static final String TAG_All_MSG = "all_msg";
-    private static final String TAG_TEMPORARY = "temporary";
-    private static final String TAG_IMPORTANTS = "importants";
-    private static final String TAG_SPAM = "spams";
-    private static final String TAG_SETTINGS = "settings";
-    public static String CURRENT_TAG = TAG_All_MSG;
-    private static final int READ_SMS_PERMISSIONS_REQUEST = 1;
-
-
-    // toolbar titles respected to selected nav menu item
-
-    private String[] activityTitles={"abc","dbd","fff","ddds","ddddd"};
+    private String[] activityTitles = {"Primary", "OTP", "Transaction", "Promotion", "Spam"};
     private DatabaseHandler databaseHandler;
-
     // flag to load all_msg fragment when user presses back key
-    private boolean shouldLoadall_msgFragOnBackPress = true;
-    private Handler mHandler;
-    ArrayList<Structuremsg> smsMessagesList = new ArrayList<>();
-    ListView messages;
-    ArrayAdapter arrayAdapter;
-    SmsManager smsManager = SmsManager.getDefault();
+    private boolean shouldLoadAllMsgFragOnBackPress = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,19 +81,16 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        startService(new Intent(this, MessegeReceiveService.class));
-       /* DataParser d = new DataParser();
-        d.writeToJson("kutte kamine bc netbanking",1);*/
+        startService(new Intent(this, MessageReceiveService.class));
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
-           // getPermissionToReadSMS();
+            getPermissionToReadSMS();
         }
-
-        mHandler = new Handler();
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
         databaseHandler = new DatabaseHandler(this);
@@ -118,8 +108,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Toast.makeText(MainActivity.this, "FAB", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -133,46 +122,41 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             navItemIndex = 0;
             CURRENT_TAG = TAG_All_MSG;
-            loadall_msgFragment();
+            loadAllMsgFragment();
         }
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch(item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.nav_Primary:
-                        bottomNavigationView.setItemBackgroundResource(R.color.colorPrimary);
-                        MainActivity.navItemIndex=0;
-                        loadall_msgFragment();
+                        MainActivity.navItemIndex = 0;
                         CURRENT_TAG = TAG_All_MSG;
-                        return  true;
+                        loadAllMsgFragment();
+                        return true;
 
                     case R.id.nav_OTP:
-                        bottomNavigationView.setItemBackgroundResource(R.color.colorPrimaryDark);
-                        MainActivity.navItemIndex=1;
-                        loadall_msgFragment();
-                        CURRENT_TAG = TAG_IMPORTANTS;
+                        MainActivity.navItemIndex = 1;
+                        CURRENT_TAG = TAG_OTP;
+                        loadAllMsgFragment();
                         return true;
 
                     case R.id.nav_Transactions:
-                        bottomNavigationView.setItemBackgroundResource(R.color.colorPrimary);
-                        MainActivity.navItemIndex=2;
-                        loadall_msgFragment();
-                        CURRENT_TAG = TAG_SPAM;
+                        MainActivity.navItemIndex = 2;
+                        CURRENT_TAG = TAG_TRANSACTION;
+                        loadAllMsgFragment();
                         return true;
 
                     case R.id.nav_Promotions:
-                        bottomNavigationView.setItemBackgroundResource(R.color.colorPrimaryDark);
-                        MainActivity.navItemIndex=3;
-                        loadall_msgFragment();
-                        CURRENT_TAG = TAG_SPAM;
+                        MainActivity.navItemIndex = 3;
+                        CURRENT_TAG = TAG_PROMOTION;
+                        loadAllMsgFragment();
                         return true;
 
                     case R.id.nav_Spams:
-                        bottomNavigationView.setItemBackgroundResource(R.color.colorPrimary);
-                        MainActivity.navItemIndex=4;
-                        loadall_msgFragment();
+                        MainActivity.navItemIndex = 4;
                         CURRENT_TAG = TAG_SPAM;
+                        loadAllMsgFragment();
                         return true;
 
                     default:
@@ -189,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
      * like background image, profile image
      * name, website, spams action view (dot)
      */
-      private void loadNavHeader() {
+    private void loadNavHeader() {
         // name, website
         txtName.setText("Ashish Jain");
         txtWebsite.setText("www.ashish.jain@gmail.com");
@@ -201,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
      * Returns respected fragment that user
      * selected from navigation menu
      */
-      public void loadall_msgFragment() {
+    public void loadAllMsgFragment() {
         // selecting appropriate nav menu item
         selectNavMenu();
 
@@ -222,23 +206,12 @@ public class MainActivity extends AppCompatActivity {
         // when switching between navigation menus
         // So using runnable, the fragment is loaded with cross fade effect
         // This effect can be seen in GMail app
-        Runnable mPendingRunnable = new Runnable() {
-            @Override
-            public void run() {
-                // update the main content by replacing fragments
-                Fragment fragment = getall_msgFragment();
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                        android.R.anim.fade_out);
-                fragmentTransaction.replace(R.id.frame, fragment, CURRENT_TAG);
-                fragmentTransaction.commitAllowingStateLoss();
-            }
-        };
-
-        // If mPendingRunnable is not null, then add to the message queue
-        if (mPendingRunnable != null) {
-            mHandler.post(mPendingRunnable);
-        }
+        Fragment fragment = getAllMsgFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                android.R.anim.fade_out);
+        fragmentTransaction.replace(R.id.frame, fragment, CURRENT_TAG);
+        fragmentTransaction.commitAllowingStateLoss();
 
         // show or hide the fab button
         toggleFab();
@@ -250,8 +223,8 @@ public class MainActivity extends AppCompatActivity {
         invalidateOptionsMenu();
     }
 
-    private Fragment getall_msgFragment() {
-        List<Structuremsg> list = null;
+    private Fragment getAllMsgFragment() {
+        List<StructureMsg> list = null;
         MsgFragment msgFragment = null;
         switch (navItemIndex) {
             case 0:
@@ -278,6 +251,12 @@ public class MainActivity extends AppCompatActivity {
                 msgFragment = new MsgFragment();
                 msgFragment.setListMsg(list);
                 return msgFragment;
+            case 4:
+                // temporary
+                list = convertList(databaseHandler.getSmsByCategory(3));
+                msgFragment = new MsgFragment();
+                msgFragment.setListMsg(list);
+                return msgFragment;
 
             /*default:
               /*  list = convertList(databaseHandler.getsms());
@@ -288,12 +267,12 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
-    private List<Structuremsg> convertList(List<MessegeEntry> getsms) {
-        List<Structuremsg> list = new ArrayList<>();
-        Log.d("MERA", getsms.size()+"");
-        for(MessegeEntry sms: getsms){
-            Log.d("MERA", sms.getMessegeAddress());
-            list.add(new Structuremsg(sms.getMessegeAddress(), sms.getBody()));
+    private List<StructureMsg> convertList(List<MessageEntry> getsms) {
+        List<StructureMsg> list = new ArrayList<>();
+        Log.d("MERA", "size: " + getsms.size());
+        for (MessageEntry sms : getsms) {
+            Log.d("MERA", sms.getMessageAddress());
+            list.add(new StructureMsg(sms.getMessageAddress(), sms.getBody()));
         }
         return list;
     }
@@ -323,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.nav_importants:
                         navItemIndex = 1;
-                        CURRENT_TAG = TAG_IMPORTANTS;
+                        CURRENT_TAG = TAG_OTP;
                         break;
                     case R.id.nav_spams:
                         navItemIndex = 2;
@@ -331,23 +310,13 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.nav_temporary:
                         navItemIndex = 3;
-                        CURRENT_TAG = TAG_TEMPORARY;
+                        CURRENT_TAG = TAG_PROMOTION;
                         break;
                     case R.id.nav_settings:
-//                        navItemIndex = 4;
-//                        CURRENT_TAG = TAG_SETTINGS;
+                        navItemIndex = 4;
+                        CURRENT_TAG = TAG_SETTINGS;
                         startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                         break;
-                    case R.id.nav_about_us:
-                        // launch new intent instead of loading fragment
-                        startActivity(new Intent(MainActivity.this, AboutUsActivity.class));
-                        drawer.closeDrawers();
-                        return true;
-                    case R.id.nav_privacy_policy:
-                        // launch new intent instead of loading fragment
-                        startActivity(new Intent(MainActivity.this, PrivacyPolicyActivity.class));
-                        drawer.closeDrawers();
-                        return true;
                     default:
                         navItemIndex = 0;
                 }
@@ -360,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 menuItem.setChecked(true);
 
-                loadall_msgFragment();
+                loadAllMsgFragment();
 
                 return true;
             }
@@ -398,13 +367,14 @@ public class MainActivity extends AppCompatActivity {
 
         // This code loads all_msg fragment when back key is pressed
         // when user is in other fragment than all_msg
-        if (shouldLoadall_msgFragOnBackPress) {
+        if (shouldLoadAllMsgFragOnBackPress) {
             // checking if user is on other navigation menu
             // rather than all_msg
             if (navItemIndex != 0) {
+                bottomNavigationView.setSelectedItemId(R.id.nav_Primary);
                 navItemIndex = 0;
                 CURRENT_TAG = TAG_All_MSG;
-                loadall_msgFragment();
+                loadAllMsgFragment();
                 return;
             }
         }
@@ -465,7 +435,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*public void getPermissionToReadSMS() {
+    public void getPermissionToReadSMS() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
             if (shouldShowRequestPermissionRationale(
@@ -475,7 +445,7 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(new String[]{Manifest.permission.READ_SMS},
                     READ_SMS_PERMISSIONS_REQUEST);
         }
-    }*/
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -495,8 +465,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public List<Structuremsg> refreshSmsInbox(String category) {
-        List<Structuremsg> list = new ArrayList<>();
+    public List<StructureMsg> refreshSmsInbox(String category) {
+        List<StructureMsg> list = new ArrayList<>();
         ContentResolver contentResolver = this.getContentResolver();
         Cursor smsInboxCursor = contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null);
         int detailCol = smsInboxCursor.getColumnIndex("body");
@@ -508,7 +478,7 @@ public class MainActivity extends AppCompatActivity {
             String sender = smsInboxCursor.getString(senderCol);
             String detail = smsInboxCursor.getString(detailCol);
             //Log.d("MERA", sender + " " + detail);
-            list.add(new Structuremsg(sender, detail));
+            list.add(new StructureMsg(sender, detail));
         } while (smsInboxCursor.moveToNext());
 
         return list;

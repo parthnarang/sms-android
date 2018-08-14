@@ -109,10 +109,13 @@ public class DataParser{
             Log.d("parth_sms", totalCount + " ");
             JSONArray feature = (JSONArray) jobject.getJSONArray("FEATURE");
             JSONObject frequency = (JSONObject) jobject.get("FREQUENCY");
+            Log.d("parth_sms", "fre: " + frequency);
             wordSet = getMap((JSONObject) jobject.get("WORDSET"));
 
             for(int i=0; i<NUM_OF_CATEGORIES ; ++i){
-                categories.add(getMap((JSONObject) frequency.get(Integer.toString(i))));
+                HashMap<String, Integer> temp = getMap((JSONObject) frequency.get(Integer.toString(i)));
+                Log.d("Mera-list", "map: " + temp);
+                categories.add(temp);
             }
             //COMMENT - READ WORDSET VALUES HERE
             //COMMENT - READ CLASS PROBABILITY VALUES HERE

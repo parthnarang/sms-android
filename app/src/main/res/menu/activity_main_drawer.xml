@@ -5,34 +5,28 @@
         /*<item
             android:id="@+id/all_msg"
             android:icon="@drawable/ic_home_black_24dp"
-            android:title="string/all_msg" />
+            android:title="All" />
         <item
             android:id="@+id/nav_importants"
             android:icon="@drawable/ic_local_important_black_24dp"
-            android:title="string/nav_important" />
+            android:title="Important" />
         <item
             android:id="@+id/nav_spams"
             android:icon="@drawable/ic_spams_black_24dp"
-            android:title="string/nav_spams" />
+            android:title="Spams" />
         <item
             android:id="@+id/nav_temporary"
             android:icon="@drawable/ic_photo_library_black_24dp"
-            android:title="string/nav_temporary" />
+            android:title="Temporary" />
 
     </group>
 
     <item android:title="Other">
         <menu>
             <item
-                android:id="@+id/nav_about_us"
-                android:title="string/nav_about_us" />
-            <item
-                android:id="@+id/nav_privacy_policy"
-                android:title="string/privacy_policy" />
-            <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_settings_black_24dp"
-                android:title="string/nav_settings" />
+                android:title="Settings" />
         </menu>
     </item>*/
 

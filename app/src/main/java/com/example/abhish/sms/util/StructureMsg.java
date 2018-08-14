@@ -4,11 +4,11 @@ package com.example.abhish.sms.util;
  * Created by abhi.sh on 1/12/2018.
  */
 
-public class Structuremsg {
+public class StructureMsg {
     private String sender;
     private String detail;
 
-    public Structuremsg(String sender, String detail){
+    public StructureMsg(String sender, String detail){
         this.sender = sender;
         this.detail = detail;
     }
