@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.example.abhish.sms.util.MessegeEntry;
+import com.example.abhish.sms.util.MessageEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseHelper 
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SMS);
         onCreate(db);
     }
-    public boolean addToDatabase(MessegeEntry entry) {
+    public boolean addToDatabase(MessageEntry entry) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = entry.getContentValues(entry);
@@ -56,8 +56,8 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseHelper 
         return true;
     }
 
-    public List<MessegeEntry> getSmsByCategory(int cat) {
-        List<MessegeEntry> sms = new ArrayList<MessegeEntry>();
+    public List<MessageEntry> getSmsByCategory(int cat) {
+        List<MessageEntry> sms = new ArrayList<MessageEntry>();
         String selectQuery = "SELECT  * FROM " + TABLE_SMS + " WHERE " + KEY_CATEGORY + " = '" + cat + "'" ;
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -65,9 +65,9 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseHelper 
         Log.d("curson",""+cursor.getCount());
         if (cursor.moveToFirst()) {
             do {
-                MessegeEntry entry = new MessegeEntry();
-                entry.messegeBody = cursor.getString(0);
-                entry.messegeAddress = cursor.getString(1);
+                MessageEntry entry = new MessageEntry();
+                entry.messageBody = cursor.getString(0);
+                entry.messageAddress = cursor.getString(1);
                 // Adding contact to list
                 sms.add(entry);
             } while (cursor.moveToNext());

@@ -10,13 +10,13 @@ import android.widget.ListView;
 
 import com.example.abhish.sms.R;
 import com.example.abhish.sms.ui.Adapters.AppAdapter;
-import com.example.abhish.sms.util.Structuremsg;
+import com.example.abhish.sms.util.StructureMsg;
 
 import java.util.List;
 
 public class MsgFragment extends Fragment {
 
-    private List<Structuremsg> listMsg;
+    private List<StructureMsg> listMsg;
     private AppAdapter appAdapter;
     private ListView listView;
 
@@ -35,7 +35,7 @@ public class MsgFragment extends Fragment {
 
     }
 
-    public void setListMsg(List<Structuremsg> listMsg) {
+    public void setListMsg(List<StructureMsg> listMsg) {
         this.listMsg = listMsg;
     }
 }

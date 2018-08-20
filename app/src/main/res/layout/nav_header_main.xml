@@ -1,47 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/view_container"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
+    android:background="@color/colorPrimaryDark"
     android:gravity="bottom"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-   <ImageView
+    <!--<android.support.v7.widget.CardView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        card_view:cardCornerRadius="25dp"
+        card_view:cardElevation="0dp"
+        card_view:contentPadding="20dp">
+
+
+
+    </android.support.v7.widget.CardView>-->
+
+    <ImageView
         android:id="@+id/img_header_bg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@mipmap/bgimg" />
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:src="@drawable/ic_account_circle"/>
+
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:orientation="vertical">
 
-        android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin">
-
-        <!--ImageView
-        layout_centerVertical="true"
-            android:id="@+id/img_profile"
-            android:layout_width="@dimen/profile_width"
-            android:layout_height="@dimen/profile_height"
-            android:paddingTop="@dimen/nav_header_vertical_spacing"
-            app:srcCompat="@mipmap/xyz" /-->
 
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            android:text="UserName" />
 
         <TextView
             android:id="@+id/website"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="mail id" />
 
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

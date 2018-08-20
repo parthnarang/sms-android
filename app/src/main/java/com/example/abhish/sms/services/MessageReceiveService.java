@@ -8,23 +8,25 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.abhish.sms.Tasks.impl.BackgroundMessageProcessingAsyncTask;
 import com.example.abhish.sms.Tasks.impl.DataIO;
 import com.example.abhish.sms.Tasks.impl.DataParser;
-import com.example.abhish.sms.database.DatabaseHandler;
 import com.example.abhish.sms.Tasks.impl.MessageProcessingByNavTaskImpl;
-import com.example.abhish.sms.Receivers.MessageReceiver;
-import com.example.abhish.sms.util.MessegeEntry;
+import com.example.abhish.sms.database.DatabaseHandler;
+import com.example.abhish.sms.util.MessageEntry;
 
-public class MessegeReceiveService extends Service {
+public class MessageReceiveService extends Service {
     MessageReceiver mReceiver;
     DatabaseHandler db;
+
+    // use this as an inner class like here or as a top-level class
+    public MessageReceiveService() {
+    }
+
     public void refreshSmsInbox() {
         Log.d("parth_test","called here");
         BackgroundMessageProcessingAsyncTask  task = new BackgroundMessageProcessingAsyncTask(this,db);
@@ -33,8 +35,7 @@ public class MessegeReceiveService extends Service {
        /* ContentResolver contentResolver = getContentResolver();
         Cursor smsInboxCursor = contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null);
 
-        for (int i = 0; i < smsInboxCursor.getColumnCount(); i++)
-        {
+        for (int i = 0; i < smsInboxCursor.getColumnCount(); i++) {
             Log.v("Count_maintain", smsInboxCursor.getColumnName(i).toString());
         }
         //smsInboxCursor.close();
@@ -60,14 +61,14 @@ public class MessegeReceiveService extends Service {
                 //Log.v("abc",smsInboxCursor.getString(read) + " " + smsInboxCursor.getString(date));
                 //arrayAdapter.add(str);
                 db = new DatabaseHandler(this);
-                MessegeEntry entry = new MessegeEntry(this);
+                MessageEntry entry = new MessageEntry(this);
                 MessageProcessingByNavTaskImpl machine = new MessageProcessingByNavTaskImpl();
-                entry.messegeAddress = number;
-                entry.messegeBody = sms_body;
+                entry.messageAddress = number;
+                entry.messageBody = sms_body;
                 entry.date = date_time;
                 //entry.contactName = getContactName(this,number);
                 entry.readStatus = Boolean.parseBoolean(read_status);
-                entry.messegeCategory = Integer.parseInt(machine.processMesg(sms_body));
+                entry.messageCategory = Integer.parseInt(machine.processMesg(sms_body));
 
                 db.addToDatabase(entry);
             } while (smsInboxCursor.moveToNext());
@@ -75,17 +76,14 @@ public class MessegeReceiveService extends Service {
         }*/
     }
 
-    // use this as an inner class like here or as a top-level class
-    public MessegeReceiveService() {
-    }
     public void onCreate() {
-        Toast.makeText(this,"dbhd",3).show();
+        Toast.makeText(this, "dbhd", Toast.LENGTH_SHORT).show();
         // get an instance of the receiver in your service
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.provider.Telephony.SMS_RECEIVED");
         mReceiver = new MessageReceiver();
         registerReceiver(mReceiver, filter);
-        Log.d("parth_sms","start");
+        Log.d("parth_sms", "start");
         //run parser on another thread
         final DataParser d = new DataParser();
         DataIO instance = DataIO.getInstance();
@@ -101,7 +99,7 @@ public class MessegeReceiveService extends Service {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
         SharedPreferences.Editor editor = pref.edit();
         String str = pref.getString("key_name", null);
-        if(str == null) {
+        if (str == null) {
             editor.putString("key_name", "true");
             editor.commit();
         }

@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.example.abhish.sms.database.DatabaseHandler;
 import com.example.abhish.sms.Tasks.impl.MessageProcessingByNavTaskImpl;
-import com.example.abhish.sms.util.MessegeEntry;
+import com.example.abhish.sms.util.MessageEntry;
 
 public class MessageReceiver extends BroadcastReceiver {
     public MessageReceiver() {
@@ -37,13 +37,13 @@ public class MessageReceiver extends BroadcastReceiver {
             // TODO: This method is called when the BroadcastReceiver is receiving
             // an Intent broadcast.
            // Toast.makeText(context, sms_str, 4).show();
-            Log.d("parth_sms", sms_body);
+            Log.d("parth_sms", "sms body: " + sms_body);
             DatabaseHandler db = new DatabaseHandler(context);
-            MessegeEntry entry= new MessegeEntry();
+            MessageEntry entry= new MessageEntry();
             MessageProcessingByNavTaskImpl machine = new MessageProcessingByNavTaskImpl();
-            entry.messegeCategory= Integer.parseInt(machine.processMesg(sms_body));
-            entry.messegeAddress=number;
-            entry.messegeBody=sms_body;
+            entry.messageCategory= Integer.parseInt(machine.processMesg(sms_body));
+            entry.messageAddress=number;
+            entry.messageBody=sms_body;
             db.addToDatabase(entry);
 
         }

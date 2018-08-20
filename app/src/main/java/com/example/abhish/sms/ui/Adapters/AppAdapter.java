@@ -12,7 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.abhish.sms.R;
-import com.example.abhish.sms.util.Structuremsg;
+import com.example.abhish.sms.util.StructureMsg;
 
 import java.util.List;
 
@@ -20,12 +20,13 @@ import java.util.List;
  * Created by abhi.sh on 1/12/2018.
  */
 
-public class AppAdapter extends BaseAdapter{
+public class AppAdapter extends BaseAdapter {
 
     private Context context;
     private int resource;
-    private List<Structuremsg> listMsg;
-    public AppAdapter(@NonNull Context context, List<Structuremsg> list) {
+    private List<StructureMsg> listMsg;
+
+    public AppAdapter(@NonNull Context context, List<StructureMsg> list) {
         this.context = context;
         listMsg = list;
     }
@@ -36,7 +37,7 @@ public class AppAdapter extends BaseAdapter{
     }
 
     @Override
-    public Structuremsg getItem(int position) {
+    public StructureMsg getItem(int position) {
         return null;
     }
 
@@ -51,7 +52,7 @@ public class AppAdapter extends BaseAdapter{
 
         View view = convertView;
 
-        if(convertView == null) {
+        if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_view, null);
         }
