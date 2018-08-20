@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.abhish.sms.Receivers.MessageReceiver;
 import com.example.abhish.sms.Tasks.impl.BackgroundMessageProcessingAsyncTask;
 import com.example.abhish.sms.Tasks.impl.DataIO;
 import com.example.abhish.sms.Tasks.impl.DataParser;

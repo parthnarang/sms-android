@@ -8,11 +8,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.util.Log;
+//import com.example.abhish.sms.Receivers.MessageReceiveService;
+import com.example.abhish.sms.ui.Activities.MainActivity;
+import com.example.abhish.sms.util.MessageEntry;
 
 import com.example.abhish.sms.database.DatabaseHandler;
-import com.example.abhish.sms.services.MessegeReceiveService;
-import com.example.abhish.sms.ui.Activities.MainActivity;
-import com.example.abhish.sms.util.MessegeEntry;
+
+
 
 public class BackgroundMessageProcessingAsyncTask extends AsyncTask<Void,Void,Void>{
 
@@ -84,14 +86,14 @@ public class BackgroundMessageProcessingAsyncTask extends AsyncTask<Void,Void,Vo
                     //Log.v("abc",smsInboxCursor.getString(read) + " " + smsInboxCursor.getString(date));
                     //arrayAdapter.add(str);
                     db = new DatabaseHandler(mContext);
-                    MessegeEntry entry = new MessegeEntry(mContext);
+                    MessageEntry entry = new MessageEntry(mContext);
                     MessageProcessingByNavTaskImpl machine = new MessageProcessingByNavTaskImpl();
-                    entry.messegeAddress = number;
-                    entry.messegeBody = sms_body;
+                    entry.messageAddress = number;
+                    entry.messageBody = sms_body;
                     entry.date = date_time;
                     entry.contactName = getContactName(mContext,number);
                     entry.readStatus = Boolean.parseBoolean(read_status);
-                    entry.messegeCategory = Integer.parseInt(machine.processMesg(sms_body));
+                    entry.messageCategory = Integer.parseInt(machine.processMesg(sms_body));
 
                     db.addToDatabase(entry);
                 } while (smsInboxCursor.moveToNext());
