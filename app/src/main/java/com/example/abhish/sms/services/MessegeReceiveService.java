@@ -2,6 +2,7 @@ package com.example.abhish.sms.services;
 
 import android.app.Service;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.abhish.sms.Tasks.impl.BackgroundMessageProcessingAsyncTask;
 import com.example.abhish.sms.Tasks.impl.DataIO;
 import com.example.abhish.sms.Tasks.impl.DataParser;
 import com.example.abhish.sms.database.DatabaseHandler;
@@ -24,7 +26,11 @@ public class MessegeReceiveService extends Service {
     MessageReceiver mReceiver;
     DatabaseHandler db;
     public void refreshSmsInbox() {
-        ContentResolver contentResolver = getContentResolver();
+        Log.d("parth_test","called here");
+        BackgroundMessageProcessingAsyncTask  task = new BackgroundMessageProcessingAsyncTask(this,db);
+        task.execute();
+
+       /* ContentResolver contentResolver = getContentResolver();
         Cursor smsInboxCursor = contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null);
 
         for (int i = 0; i < smsInboxCursor.getColumnCount(); i++)
@@ -66,7 +72,7 @@ public class MessegeReceiveService extends Service {
                 db.addToDatabase(entry);
             } while (smsInboxCursor.moveToNext());
             db.close();
-        }
+        }*/
     }
 
     // use this as an inner class like here or as a top-level class
