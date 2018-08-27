@@ -30,7 +30,7 @@
         <activity android:name=".ui.Activities.PrivacyPolicyActivity" />
 
         <service
-            android:name=".services.MessegeReceiveService"
+            android:name=".services.MessageReceiveService"
             android:enabled="true"
             android:exported="true" />
 

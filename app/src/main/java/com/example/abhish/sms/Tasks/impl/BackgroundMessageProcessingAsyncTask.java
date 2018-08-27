@@ -27,7 +27,7 @@ public class BackgroundMessageProcessingAsyncTask extends AsyncTask<Void,Void,Vo
 
     public BackgroundMessageProcessingAsyncTask(final Context context,DatabaseHandler db) {
         mContext = context;
-        this.db=db;
+       // this.db=db;
     }
     public String getContactName(Context context, String phoneNumber) {
         ContentResolver cr = context.getContentResolver();
@@ -83,7 +83,7 @@ public class BackgroundMessageProcessingAsyncTask extends AsyncTask<Void,Void,Vo
                     String read_status = smsInboxCursor.getString(read);
                     String date_time = smsInboxCursor.getString(date);
 
-                    //Log.v("abc",smsInboxCursor.getString(read) + " " + smsInboxCursor.getString(date));
+                 //   Log.v("abc",smsInboxCursor.getString(number) + " " + smsInboxCursor.getString(date));
                     //arrayAdapter.add(str);
                     db = new DatabaseHandler(mContext);
                     MessageEntry entry = new MessageEntry(mContext);

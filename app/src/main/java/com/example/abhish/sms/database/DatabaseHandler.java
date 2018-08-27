@@ -46,13 +46,17 @@ public class DatabaseHandler extends SQLiteOpenHelper implements DatabaseHelper 
         onCreate(db);
     }
     public boolean addToDatabase(MessageEntry entry) {
-
+       Log.d("parth","add_to_databse");
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = entry.getContentValues(entry);
-
+try{
         // Inserting Row
         db.insert(TABLE_SMS, null, values);
         db.close(); // Closing database connection
+        }
+        catch (Exception e){
+    Log.d("parth", entry.toString());
+        }
         return true;
     }
 

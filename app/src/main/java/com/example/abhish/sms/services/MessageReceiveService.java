@@ -78,6 +78,7 @@ public class MessageReceiveService extends Service {
     }
 
     public void onCreate() {
+        Log.d("parth","oncreate");
         Toast.makeText(this, "dbhd", Toast.LENGTH_SHORT).show();
         // get an instance of the receiver in your service
         IntentFilter filter = new IntentFilter();
