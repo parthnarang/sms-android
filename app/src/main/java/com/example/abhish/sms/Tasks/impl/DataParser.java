@@ -196,6 +196,55 @@ public class DataParser{
         }
     }
 
+    public void changeJSONCategory(String from_cat,String to_cat,String msg){
+        int cat = Integer.parseInt(to_cat);
+        writeToJson(msg,cat);
+
+        int cat_from = Integer.parseInt(from_cat);
+        HashMap<String,Integer> map = getCategoryMap(cat_from);
+        // int count = tcount.get(cat);
+        // tcount.put(String.valueOf(cat), ++count);
+        String[] msgparts = msg.split(" ");
+        for (int i = 0; i < msgparts.length; ++i) {
+            String word = msgparts[i];
+            if(map.containsKey(word)){
+                int count = map.get(word);
+                if(count>0){
+                    --count;
+                }
+                map.put(word,count);
+            }
+        }
+
+        int init_val = totalCount.get(Integer.toString(cat_from));
+        totalCount.put(Integer.toString(cat_from), init_val - msgparts.length);
+
+        String jsonStr = returnJsonString();
+        try {
+            JSONObject jobject = new JSONObject(jsonStr);
+
+            JSONObject frequency = (JSONObject) jobject.get("FREQUENCY");
+            JSONObject category = new JSONObject(map);
+            JSONObject tCount = new JSONObject(totalCount);
+
+            jobject.put("COUNT",tCount);//COMMENT - CHECK VALIDITY
+            frequency.put(String.valueOf(cat_from),category);
+            jobject.put("FREQUENCY",frequency);
+
+            String path = "storage/emulated/0/datar.json";
+
+            ObjectOutputStream outputStream = null;
+            outputStream = new ObjectOutputStream(new FileOutputStream(path));
+            System.out.println("Start Writings");
+            outputStream.writeObject(jobject.toString());
+            outputStream.flush();
+            outputStream.close();
+        }
+        catch (Exception e){
+            Log.d("parth",e.toString());
+        }
+    }
+
     public void WriteToFile(final String msg, final int cat) {
         //COMMENT - CHECK IF MEMORY LEAK IS OCCURING!!
         runnable = new Runnable() {
@@ -205,5 +254,14 @@ public class DataParser{
             }
         };
        // instance.getHandler().post(runnable);
+    }
+
+    public void ChangeCategoryFile(final String from_cat, final String to_cat, final String msg) {
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                changeJSONCategory(from_cat,to_cat,msg);
+            }
+        };
     }
 }

@@ -35,6 +35,20 @@ public class NaiveBayes {
         classProbabilities.put("2",0.2);
         classProbabilities.put("3",0.2);
         classProbabilities.put("4",0.2);
+
+        /*
+        if(mode == BULK){
+            classProbabilities.put("0",0.2);
+            classProbabilities.put("1",0.2);
+            classProbabilities.put("2",0.2);
+            classProbabilities.put("3",0.2);
+            classProbabilities.put("4",0.2);
+        }
+        else{
+            //getclassProbabilities() of all classes
+        }
+
+         */
     }
 
 
@@ -72,14 +86,18 @@ public class NaiveBayes {
         return category;
     }
 
+    public void changeCategory(String from_cat,String to_cat,String msg){
+        dataParser.ChangeCategoryFile(from_cat,to_cat,msg);
+    }
+
     @SuppressWarnings("static-access")
-    public int getCategory(String txt) {
+    public int getCategory(String txt,String number) {
         // data cleaning
         String msg = PreprocessingUtils.cleanData(txt);
 
         populateDataStructures();
 
-        int prediction = NaiveBayesClassifier(msg);
+        int prediction = NaiveBayesClassifier(msg + " " + number);
 
         dataParser.WriteToFile(msg,prediction);
 

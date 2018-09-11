@@ -10,7 +10,7 @@ public class MessageProcessingByNavTaskImpl implements MessageProcessingByNavTas
 
     public String processMesg(String mesg,String number){
         int category = 0;
-        category = nb.getCategory(mesg);
+        category = nb.getCategory(mesg,number);
         return Integer.toString(category);
     }
 }
