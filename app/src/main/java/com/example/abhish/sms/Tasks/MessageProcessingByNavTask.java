@@ -5,5 +5,6 @@ package com.example.abhish.sms.Tasks;
  */
 public interface MessageProcessingByNavTask {
     //public void updateMessegeCategory(String messege,int oldCat,int newCat);
-    public String processMesg(String mesg);
+    public String processMesg(String mesg,String number);
+   // public String changeCategory(String mesg,);
 }
