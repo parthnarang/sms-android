@@ -16,7 +16,7 @@ from collections import Counter
 
 def clean(txt,remove_stops=False,stemming=False):
     txt = str(txt).lower()
-    txt = re.sub(r'[^A-Za-z0-9\s]',r'',txt)
+    txt = re.sub(r'[^A-Za-z\s]',r'',txt)
     txt = re.sub(r'\n',r' ',txt)
     txt = re.sub(r'\r',r' ',txt)
     
@@ -26,6 +26,25 @@ def clean(txt,remove_stops=False,stemming=False):
         ps = PorterStemmer()
         txt = " ".join([ps.stem(w) for w in txt.split()])
     return txt
+
+def modifyAddress(val):
+    #print type(val)
+    try:
+        newval = int(float(val))
+        return ""
+    except:
+        #print "Address not an Int: ",e
+        pass
+    return " " + val
+
+def modifyMessage(val):
+    newmsg = ""
+    for token in val.split():
+        try:
+            newval = int(float(token))
+        except:
+            newmsg = newmsg + " " + token
+    return newmsg
 
 path  = "data.csv"
 x = pd.read_csv(path)
@@ -44,19 +63,40 @@ for i in range(len(x)):
 
 print train.head()
 
-#stops = set(stopwords.word("english"))
-stops = text.ENGLISH_STOP_WORDS
 
 df = pd.DataFrame(train)
+#stops = set(stopwords.word("english"))
+stops = text.ENGLISH_STOP_WORDS
+print df['ADDRESS']
+addresslst = df['ADDRESS'].values.tolist()
+#df['ADDRESS'] = df['ADDRESS'].map(lambda x:addresslst.append(x))
+print 'Address list before is ',addresslst[:50]
+addresslst = map(lambda x: modifyAddress(x),addresslst)
+print 'Address list is ',addresslst[:50]
+addrl = pd.Series(addresslst)
+
+df['MODADDR'] = addrl
+
+print df.MODADDR
+messages = df['MESSAGE'].values.tolist()
+messages = map(lambda x: modifyMessage(x),messages)
+
+messagepd = pd.Series(messages)
+df['MESSAGE'] = messagepd
+
+
 df['ADDRESS'] = df['ADDRESS'].map(lambda x:clean(x,True,False))
 df['MESSAGE'] = df['MESSAGE'].map(lambda x:clean(x,True,False))
 df['CNAME'] = df['CNAME'].map(lambda x:clean(x,True,False))
 
-print df.head()
+df['MESSAGE'] = df['MESSAGE'] + df['MODADDR']
 
-countVec = CountVectorizer(analyzer='word',ngram_range=(1,1),max_features=300)
+print df.MESSAGE.tolist()[10:30]
+
+countVec = CountVectorizer(analyzer='word',ngram_range=(1,1),max_features=300000)
 bagofwords = countVec.fit_transform(df['MESSAGE'])
 temp = dict(countVec.vocabulary_).keys()
+#print len(temp)
 features = [val.encode("utf-8") for val in temp]
 mp = {}
 cnt = {}
