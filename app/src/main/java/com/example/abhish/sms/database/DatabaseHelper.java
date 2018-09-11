@@ -11,6 +11,7 @@ import java.util.List;
 public interface DatabaseHelper {
     public List<MessageEntry> getSmsByCategory(int cat);
     public boolean addToDatabase(MessageEntry entry);
+    //public boolean alterDatabase(MessageEntry entry);
 
     // public List<Sms_format> getSms();
     //public long getSmsCount(String cat);

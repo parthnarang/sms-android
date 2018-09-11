@@ -41,7 +41,7 @@ public class MessageReceiver extends BroadcastReceiver {
             DatabaseHandler db = new DatabaseHandler(context);
             MessageEntry entry= new MessageEntry();
             MessageProcessingByNavTaskImpl machine = new MessageProcessingByNavTaskImpl();
-            entry.messageCategory= Integer.parseInt(machine.processMesg(sms_body));
+            entry.messageCategory= Integer.parseInt(machine.processMesg(sms_body,number));
             entry.messageAddress=number;
             entry.messageBody=sms_body;
             db.addToDatabase(entry);
