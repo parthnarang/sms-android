@@ -93,7 +93,7 @@ public class BackgroundMessageProcessingAsyncTask extends AsyncTask<Void,Void,Vo
                     entry.date = date_time;
                     entry.contactName = getContactName(mContext,number);
                     entry.readStatus = Boolean.parseBoolean(read_status);
-                    entry.messageCategory = Integer.parseInt(machine.processMesg(sms_body));
+                    entry.messageCategory = Integer.parseInt(machine.processMesg(sms_body,number));
 
                     db.addToDatabase(entry);
                 } while (smsInboxCursor.moveToNext());

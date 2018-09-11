@@ -8,7 +8,7 @@ import com.example.abhish.sms.Tasks.MessageProcessingByNavTask;
 public class MessageProcessingByNavTaskImpl implements MessageProcessingByNavTask {
     static private NaiveBayes nb = new NaiveBayes();
 
-    public String processMesg(String mesg){
+    public String processMesg(String mesg,String number){
         int category = 0;
         category = nb.getCategory(mesg);
         return Integer.toString(category);
