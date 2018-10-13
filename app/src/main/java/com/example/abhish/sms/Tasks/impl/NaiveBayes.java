@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Locale;
 
 public class NaiveBayes {
     DataParser dataParser = new DataParser();
@@ -17,13 +16,12 @@ public class NaiveBayes {
     static HashMap<String, Integer> wordSet;
     static HashMap<String, Double> classProbabilities = new HashMap<String,Double>();
     static int NUM_OF_CATEGORIES;
-    static int BULK = 0;
 
     //Read, Update and Save tcount values
     static HashMap<String, Integer> totalCount;
 
 
-    void populateDataStructures(CategoryData categoryData,int mode){
+    void populateDataStructures(){
         categories = dataParser.getCategories();
         wordSet = dataParser.getWordSet();
         NUM_OF_CATEGORIES = dataParser.getNumOfCategories();
@@ -38,7 +36,7 @@ public class NaiveBayes {
         classProbabilities.put("3",0.2);
         classProbabilities.put("4",0.2);
 
-
+        /*
         if(mode == BULK){
             classProbabilities.put("0",0.2);
             classProbabilities.put("1",0.2);
@@ -47,18 +45,10 @@ public class NaiveBayes {
             classProbabilities.put("4",0.2);
         }
         else{
-            int totalCategoryCount = categoryData.category0 + categoryData.category1 + categoryData.category2 + categoryData.category3 + categoryData.category4;
-            double category0 = (Double)(categoryData.category0)/(double)totalCategoryCount;
-            double category1 = (Double)(categoryData.category1)/(double)totalCategoryCount;
-            double category2 = (Double)(categoryData.category2)/(double)totalCategoryCount;
-            double category3 = (Double)(categoryData.category3)/(double)totalCategoryCount;
-            double category4 = (Double)(categoryData.category4)/(double)totalCategoryCount;
-            classProbabilities.put("0",category0);
-            classProbabilities.put("1",category1);
-            classProbabilities.put("2",category2);
-            classProbabilities.put("3",category3);
-            classProbabilities.put("4",category4);
+            //getclassProbabilities() of all classes
         }
+
+         */
     }
 
 
@@ -101,11 +91,11 @@ public class NaiveBayes {
     }
 
     @SuppressWarnings("static-access")
-    public int getCategory(String txt,String number, CategoryData categoryData,int mode) {
+    public int getCategory(String txt,String number) {
         // data cleaning
         String msg = PreprocessingUtils.cleanData(txt);
 
-        populateDataStructures(categoryData,mode);
+        populateDataStructures();
 
         int prediction = NaiveBayesClassifier(msg + " " + number);
 
